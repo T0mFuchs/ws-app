@@ -40,7 +40,9 @@ app.post("/create", jsonParser, async (req, res) => {
       const collection = mongoClient.db("test2").collection("objects");
       const result = await collection.insertOne({ ...req.body });
       const { insertedId } = result;
-      res.status(200).send({ _id: insertedId });
+      res.type("application/json");
+      res.header("Access-Control-Allow-Origin", CLIENT_URL as string);
+      res.status(200).send({ ack: true });
       //* emit new object to all clients
       io.emit("new-object", { _id: insertedId, ...req.body });
     } catch (e) {
@@ -61,8 +63,10 @@ app.put("/update", jsonParser, async (req, res) => {
       );
       //* emit updated object to all clients
       if (response.modifiedCount === 1) {
+        res.type("application/json");
+        res.header("Access-Control-Allow-Origin", CLIENT_URL as string);
+        res.status(200).send({ ack: true });
         io.emit("updated-object", { _id: req.body._id, ...req.body.update });
-        res.status(200).end();
       } else {
         res.status(400).end();
       }
@@ -83,8 +87,10 @@ app.delete("/delete", jsonParser, async (req, res) => {
       });
 
       if (response.deletedCount === 1) {
+        res.type("application/json");
+        res.header("Access-Control-Allow-Origin", CLIENT_URL as string);
+        res.status(200).send({ ack: true });
         io.emit("deleted-object", { ...req.body });
-        res.status(200).end();
       } else {
         res.status(400).end();
       }

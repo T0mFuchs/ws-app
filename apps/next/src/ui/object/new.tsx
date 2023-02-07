@@ -25,7 +25,7 @@ export default function NewObject() {
           rounded
           name="name"
           placeholder="name"
-          value={object?.name}
+          value={object?.name ?? ""}
           onChange={(evt) => setObject({ ...object, name: evt.target.value })}
         />
         <label htmlFor="desc" />
@@ -35,7 +35,7 @@ export default function NewObject() {
           rounded
           name="desc"
           placeholder="description"
-          value={object?.desc}
+          value={object?.desc ?? ""}
           onChange={(evt) => setObject({ ...object, desc: evt.target.value })}
         />
         <button type="submit" h-4 ml-1 />

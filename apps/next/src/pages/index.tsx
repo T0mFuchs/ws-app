@@ -59,8 +59,9 @@ export default function Home({ API_URL }: { API_URL: string }) {
 
     //* on deleted-object remove deleted object from stateArray
     socket.on("deleted-object", (data: any) => {
-      // @ts-ignore @ts-expect-error
-      setStateArray(stateArray?.filter((item: any) => item._id !== data._id));
+      setStateArray((prevState: any) =>
+        prevState.filter((item: any) => item._id !== data._id)
+      );
     });
   });
 
@@ -72,7 +73,7 @@ export default function Home({ API_URL }: { API_URL: string }) {
         <link rel="icon" href="/empty.svg" />
       </Head>
 
-      <main grid justify-center>
+      <main grid justify-center pt-8>
         <React.Suspense>
           {stateArray ? (
             <>

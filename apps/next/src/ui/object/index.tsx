@@ -9,6 +9,10 @@ export default function Object({ object }: { object: any }) {
 
   const onSubmit = async (evt) => {
     evt.preventDefault();
+    if (state.name === "") {
+      await deleteObject({ _id: state._id });
+      return;
+    }
     if (state.name !== object.name || state.desc !== object.desc) {
       await updateObject({
         _id: state._id,
@@ -17,9 +21,6 @@ export default function Object({ object }: { object: any }) {
           desc: evt.target.desc.value,
         },
       });
-    }
-    if (state.name === "") {
-      await deleteObject({ _id: state._id });
     }
   };
 
@@ -32,7 +33,8 @@ export default function Object({ object }: { object: any }) {
           border-1
           rounded
           name="name"
-          placeholder="name"
+          title="name"
+          placeholder="|"
           value={state.name}
           onChange={(evt) => setState({ ...state, name: evt.target.value })}
         />
@@ -42,7 +44,8 @@ export default function Object({ object }: { object: any }) {
           border-1
           rounded
           name="desc"
-          placeholder="description"
+          title="description"
+          placeholder="empty"
           value={state.desc}
           onChange={(evt) => setState({ ...state, desc: evt.target.value })}
         />
