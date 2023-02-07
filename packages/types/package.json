@@ -1,0 +1,8 @@
+{
+  "name": "@packages/types",
+  "description": "typings",
+  "types": "index.ts",
+  "dependencies": {
+    "zod": "^3.20.2"
+  }
+}
