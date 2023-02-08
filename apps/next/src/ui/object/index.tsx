@@ -1,8 +1,9 @@
 // @ts-nocheck
 import React from "react";
+import clsx from "clsx";
 
-import { updateObject } from "@/hooks/object";
-import { deleteObject } from "@/hooks/object";
+import { updateObject, deleteObject } from "@/hooks";
+
 
 import type { ObjectType } from "@packages/types";
 
@@ -71,7 +72,16 @@ export default function Object({
           value={state.desc ?? undefined}
           onChange={(evt) => setState({ ...state, desc: evt.target.value })}
         />
-        <button type="submit" h-4 ml-1 />
+        <button
+          type="submit"
+          h-4
+          ml-1
+          disabled={
+            object.name !== "" &&
+            object.name === state.name &&
+            object.desc === state.desc
+          }
+        />
       </form>
     </>
   );

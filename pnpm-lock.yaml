@@ -34,6 +34,8 @@ importers:
       '@radix-ui/react-popover': ^1.0.3
       '@radix-ui/react-select': ^1.2.0
       '@radix-ui/react-separator': ^1.0.1
+      '@types/react-input-autosize': ^2.2.1
+      '@unocss/preset-icons': ^0.49.4
       '@unocss/webpack': ^0.49.4
       clsx: ^1.2.1
       cross-env: ^7.0.3
@@ -41,11 +43,11 @@ importers:
       framer-motion: ^9.0.2
       jotai: ^2.0.0
       ky: ^0.33.2
-      ky-universal: ^0.11.0
       next: 13.0.1
       preact: ^10.11.3
       react: 18.2.0
       react-dom: 18.2.0
+      react-input-autosize: ^3.0.0
       socket.io-client: ^4.5.4
       unocss: ^0.49.4
     dependencies:
@@ -59,6 +61,8 @@ importers:
       '@radix-ui/react-popover': 1.0.3_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-select': 1.2.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-separator': 1.0.1_biqbaboplfbrettd7655fr4n2y
+      '@types/react-input-autosize': 2.2.1
+      '@unocss/preset-icons': 0.49.4
       '@unocss/webpack': 0.49.4
       clsx: 1.2.1
       cross-env: 7.0.3
@@ -66,11 +70,11 @@ importers:
       framer-motion: 9.0.2_biqbaboplfbrettd7655fr4n2y
       jotai: 2.0.0_react@18.2.0
       ky: 0.33.2
-      ky-universal: 0.11.0_ky@0.33.2
       next: 13.0.1_biqbaboplfbrettd7655fr4n2y
       preact: 10.12.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-input-autosize: 3.0.0_react@18.2.0
       socket.io-client: 4.6.0
       unocss: 0.49.4_@unocss+webpack@0.49.4
 
@@ -1467,6 +1471,12 @@ packages:
 
   /@types/react-dom/18.0.10:
     resolution: {integrity: sha512-E42GW/JA4Qv15wQdqJq8DL4JhNpB3prJgjgapN3qJT9K2zO5IIAQh4VXvCEDupoqAwnz0cY4RlXeC/ajX5SFHg==}
+    dependencies:
+      '@types/react': 18.0.27
+    dev: false
+
+  /@types/react-input-autosize/2.2.1:
+    resolution: {integrity: sha512-RxzEjd4gbLAAdLQ92Q68/AC+TfsAKTc4evsArUH1aIShIMqQMIMjsxoSnwyjtbFTO/AGIW/RQI94XSdvOxCz/w==}
     dependencies:
       '@types/react': 18.0.27
     dev: false
@@ -4150,6 +4160,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-input-autosize/3.0.0_react@18.2.0:
+    resolution: {integrity: sha512-nL9uS7jEs/zu8sqwFE5MAPx6pPkNAriACQ2rGLlqmKr2sPGtN7TXTyDdQt4lbNXVx7Uzadb40x8qotIuru6Rhg==}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-is/16.13.1:

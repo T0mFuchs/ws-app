@@ -3,6 +3,8 @@ import React from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { io } from "socket.io-client";
+import clsx from "clsx";
+import AutosizeInput from "react-input-autosize";
 
 import type { GetServerSideProps } from "next";
 import type { ObjectType } from "@packages/types";
@@ -18,15 +20,17 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Object = dynamic(() => import("@/ui/object"));
 const NewObject = dynamic(() => import("@/ui/object/new"));
 
+const default_db = "db1";
+const default_collection = "collection1";
+
 export default function Home({ API_URL }: { API_URL: string }) {
+  const [db, setDb] = React.useState<string>(default_db);
+  const [collection, setCollection] =
+    React.useState<string>(default_collection);
   const [stateArray, setStateArray] = React.useState<ObjectType[] | null>(null);
-  const [db, setDb] = React.useState<string>("db1");
-  const [collection, setCollection] = React.useState<string>("collection1");
   const [rerender, setRerender] = React.useState<boolean>(false);
 
-  
   React.useState(() => {
-    
     const socket = io(API_URL);
 
     //* socket connection event
@@ -71,19 +75,18 @@ export default function Home({ API_URL }: { API_URL: string }) {
     });
 
     return () => socket.off("data");
-
   });
 
   React.useEffect(() => {
     if (rerender) {
       const socket = io(API_URL);
       //* receive data from the onSubmit triggered event
-        socket.on("data", (data: ObjectType[]) => {
-          setStateArray(data);
-          setRerender(false);
-        })
+      socket.on("data", (data: ObjectType[]) => {
+        setStateArray(data);
+        setRerender(false);
+      });
     }
-  }, [rerender, API_URL]);  
+  }, [rerender, API_URL]);
 
   const onSubmit = async (evt: React.SyntheticEvent) => {
     evt.preventDefault();
@@ -92,7 +95,7 @@ export default function Home({ API_URL }: { API_URL: string }) {
     socket.on("connect", () => {
       socket.emit("get-data", { db: db, collection: collection });
       setRerender(true);
-    })
+    });
     return () => socket.off("connect");
   };
 
@@ -105,22 +108,39 @@ export default function Home({ API_URL }: { API_URL: string }) {
       </Head>
 
       <form onSubmit={onSubmit} p-1>
-          <label htmlFor="db" />
-          <input
-            name="db"
-            placeholder="db"
-            value={db}
-            onChange={(evt) => setDb(evt.target.value)}
-          />
-          <label htmlFor="collection" />
-          <input
-            name="collection"
-            placeholder="collection"
-            value={collection}
-            onChange={(evt) => setCollection(evt.target.value)}
-          />
-          <button type="submit" h-4 ml-1 />
-        </form>
+        <label htmlFor="db" />
+        <AutosizeInput
+          bg-transparent
+          border-1
+          rounded
+          name="db"
+          placeholder="db"
+          value={db}
+          onChange={(evt) => {
+            setDb(evt.target.value);
+            console.log(db !== "" && db !== default_db);
+          }}
+        />
+        <label htmlFor="collection" />
+        <AutosizeInput
+          bg-transparent
+          border-1
+          rounded
+          name="collection"
+          placeholder="collection"
+          value={collection}
+          onChange={(evt) => setCollection(evt.target.value)}
+        />
+        <button
+          type="submit"
+          className={clsx({
+            "bg-transparent border-0": db === default_db && collection === default_collection,
+            "i-mdi-source-branch-refresh": db !== "" && db !== default_db,
+          })}
+          disabled={db === default_db && collection === default_collection}
+          ml-1
+        />
+      </form>
       <main grid justify-center pt-8>
         <React.Suspense>
           {stateArray ? (

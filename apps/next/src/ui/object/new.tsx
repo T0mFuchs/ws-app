@@ -1,7 +1,8 @@
 // @ts-nocheck
 import React from "react";
+import clsx from "clsx";
 
-import { createObject } from "@/hooks/object";
+import { createObject } from "@/hooks";
 
 import type { ObjectType } from "@packages/types";
 

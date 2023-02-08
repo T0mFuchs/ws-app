@@ -42,7 +42,11 @@ app.post("/:db/:collection/create", jsonParser, async (req, res) => {
       const { db, collection } = req.params;
       const source = mongoClient.db(db).collection(collection);
       const timestamp = Date.now();
-      const response = await source.insertOne({ ...req.body, iat: timestamp, eat: timestamp });
+      const response = await source.insertOne({
+        ...req.body,
+        iat: timestamp,
+        eat: timestamp,
+      });
       const { insertedId } = response;
 
       if (response.acknowledged) {
@@ -51,7 +55,12 @@ app.post("/:db/:collection/create", jsonParser, async (req, res) => {
         res.status(200).send("ok");
 
         //* emit new object to all clients
-        io.emit("new-object", { _id: insertedId, ...req.body, iat: timestamp, eat: timestamp });
+        io.emit("new-object", {
+          _id: insertedId,
+          ...req.body,
+          iat: timestamp,
+          eat: timestamp,
+        });
       } else {
         res.status(500).end();
       }
@@ -78,7 +87,11 @@ app.put("/:db/:collection/update", jsonParser, async (req, res) => {
         res.status(200).send("ok");
 
         //* emit updated object to all clients
-        io.emit("updated-object", { _id: req.body._id, ...req.body.update, eat: Date.now() });
+        io.emit("updated-object", {
+          _id: req.body._id,
+          ...req.body.update,
+          eat: Date.now(),
+        });
       } else {
         res.status(500).end();
       }
