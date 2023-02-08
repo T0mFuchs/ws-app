@@ -4,22 +4,44 @@ import React from "react";
 import { updateObject } from "@/hooks/object";
 import { deleteObject } from "@/hooks/object";
 
-export default function Object({ object }: { object: any }) {
-  const [state, setState] = React.useState(object);
+import type { ObjectType } from "@packages/types";
 
-  const onSubmit = async (evt) => {
+export default function Object({
+  object,
+  db,
+  collection,
+}: {
+  object: ObjectType;
+  db: string;
+  collection: string;
+}) {
+  const [state, setState] = React.useState<ObjectType>(object);
+
+  const onSubmit = async (evt: React.SyntheticEvent) => {
     evt.preventDefault();
     if (state.name === "") {
-      await deleteObject({ _id: state._id });
+      await deleteObject({
+        data: { _id: state._id },
+        db: db,
+        collection: collection,
+      });
       return;
     }
     if (state.name !== object.name || state.desc !== object.desc) {
+      const target = evt.target as typeof evt.target & {
+        name: { value: string };
+        desc: { value: string };
+      };
       await updateObject({
-        _id: state._id,
-        update: {
-          name: evt.target.name.value,
-          desc: evt.target.desc.value,
+        data: {
+          _id: state._id,
+          update: {
+            name: target.name.value,
+            desc: target.desc.value,
+          },
         },
+        db: db,
+        collection: collection,
       });
     }
   };
@@ -35,7 +57,7 @@ export default function Object({ object }: { object: any }) {
           name="name"
           title="name"
           placeholder="|"
-          value={state.name}
+          value={state.name ?? undefined}
           onChange={(evt) => setState({ ...state, name: evt.target.value })}
         />
         <label htmlFor="desc" />
@@ -46,7 +68,7 @@ export default function Object({ object }: { object: any }) {
           name="desc"
           title="description"
           placeholder="empty"
-          value={state.desc}
+          value={state.desc ?? undefined}
           onChange={(evt) => setState({ ...state, desc: evt.target.value })}
         />
         <button type="submit" h-4 ml-1 />

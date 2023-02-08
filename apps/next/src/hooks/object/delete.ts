@@ -1,11 +1,19 @@
 import ky from "ky";
 
-const { API_URL, CLIENT_URL } = process.env;
+const API_URL = process.env.API_URL as string;
 
-export async function deleteObject(data: any) {
-  await ky.delete("delete", {
+export async function deleteObject({
+  data,
+  db,
+  collection,
+}: {
+  data: { _id: string };
+  db: string;
+  collection: string;
+}) {
+  await ky.delete(`delete`, {
     json: data,
-    prefixUrl: API_URL ?? "http://localhost:3000",
+    prefixUrl: `${API_URL}/${db}/${collection}`,
     mode: "cors",
   });
 }

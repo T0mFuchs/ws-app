@@ -3,14 +3,30 @@ import React from "react";
 
 import { createObject } from "@/hooks/object";
 
-export default function NewObject() {
-  const [object, setObject] = React.useState<any | null>(null);
+import type { ObjectType } from "@packages/types";
 
-  const handleSubmit = async (evt) => {
+export default function NewObject({
+  db,
+  collection,
+}: {
+  db: string;
+  collection: string;
+}) {
+  const [object, setObject] = React.useState<ObjectType | null>(null);
+
+  const handleSubmit = async (evt: React.SyntheticEvent) => {
     evt.preventDefault();
+    const target = evt.target as typeof evt.target & {
+      name: { value: string };
+      desc: { value: string };
+    };
     await createObject({
-      name: evt.target.name.value,
-      desc: evt.target.desc.value,
+      data: {
+        name: target.name.value,
+        desc: target.desc.value,
+      },
+      db: db,
+      collection: collection,
     });
     setObject(null);
   };

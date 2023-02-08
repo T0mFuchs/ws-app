@@ -1,9 +1,9 @@
 {
   "name": "next-app",
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "cross-env DEBUG=socket.io:client next dev -p 3001",
     "prod": "next build && next start -p 3001",
-    "": "/* cross-env DEBUG=socket.io:client */"
+    "": "/*  */"
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.1.46",

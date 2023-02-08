@@ -1,11 +1,21 @@
 import ky from "ky";
 
-const { API_URL, CLIENT_URL } = process.env;
+import type { ObjectType } from "@packages/types";
 
-export async function updateObject(data: any) {
-  await ky.put("update", {
+const API_URL = process.env.API_URL as string;
+
+export async function updateObject({
+  data,
+  db,
+  collection,
+}: {
+  data: ObjectType;
+  db: string;
+  collection: string;
+}) {
+  await ky.put(`update`, {
     json: data,
-    prefixUrl: API_URL ?? "http://localhost:3000",
+    prefixUrl: `${API_URL}/${db}/${collection}`,
     mode: "cors",
   });
 }
