@@ -4,11 +4,14 @@ import compression from "compression";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-import { MongoClient, ObjectId } from "mongodb";
+import { mongooseConnect } from "mongooseConnect";
+import page from "models/page";
 import dotenv from "dotenv";
 dotenv.config();
 
-const { MONGO_URL, CLIENT_URL, API_URL, NODE_ENV } = process.env;
+const { CLIENT_URL, API_URL, NODE_ENV } = process.env as {
+  [key: string]: string;
+};
 
 const app = express();
 const server = new http.Server(app);
@@ -20,51 +23,36 @@ const io = new Server(server, {
 });
 const jsonParser = bodyParser.json();
 
-//* socket client connection
-const mongoClient = new MongoClient(MONGO_URL as string);
-
 io.on("connection", async (socket) => {
-  socket.on("get-data", async ({ db, collection }) => {
+  socket.on("get-data", async () => {
     try {
-      const source = mongoClient.db(db).collection(collection);
-      const data = await source.find().toArray();
+      await mongooseConnect();
+      const data = await page.find({}).populate("parent").populate("children");
       //* emit data to all clients
-      io.emit("data", data);
+      if (data) io.emit("data", data);
     } catch (e) {
       console.log(e);
     }
   });
 });
 
-app.post("/:db/:collection/create", jsonParser, async (req, res) => {
+app.post("/create", jsonParser, async (req, res) => {
   if (req.method === "POST") {
     try {
-      const { db, collection } = req.params;
-      const source = mongoClient.db(db).collection(collection);
       const timestamp = Date.now();
-      const response = await source.insertOne({
+      await mongooseConnect();
+      const data = await page.create({
         ...req.body,
         iat: timestamp,
         eat: timestamp,
       });
-      const { insertedId } = response;
-
-      if (response.acknowledged) {
-        res.type("application/json");
-        res.header("Access-Control-Allow-Origin", CLIENT_URL as string);
+      if (data) {
+        io.emit("new-page", data);
+        res.header("Access-Control-Allow-Origin", CLIENT_URL);
         res.status(200).send("ok");
-
-        //* emit new object to all clients
-        io.emit("new-object", {
-          _id: insertedId,
-          ...req.body,
-          iat: timestamp,
-          eat: timestamp,
-        });
-      } else {
-        res.status(500).end();
       }
     } catch (e) {
+      res.status(500).end();
       console.log(e);
     }
   } else {
@@ -72,29 +60,87 @@ app.post("/:db/:collection/create", jsonParser, async (req, res) => {
   }
 });
 
-app.put("/:db/:collection/update", jsonParser, async (req, res) => {
+app.put("/update", jsonParser, async (req, res) => {
   if (req.method === "PUT") {
     try {
-      const { db, collection } = req.params;
-      const source = mongoClient.db(db).collection(collection);
-      const response = await source.updateOne(
-        { _id: new ObjectId(req.body._id) },
-        { $set: { ...req.body.update, eat: Date.now() } }
-      );
-      if (response.modifiedCount === 1) {
-        res.type("application/json");
-        res.header("Access-Control-Allow-Origin", CLIENT_URL as string);
-        res.status(200).send("ok");
+      const timestamp = Date.now();
+      console.log(req.body);
+      await mongooseConnect();
 
-        //* emit updated object to all clients
-        io.emit("updated-object", {
-          _id: req.body._id,
-          ...req.body.update,
-          eat: Date.now(),
-        });
-      } else {
-        res.status(500).end();
+      if (!req.body.update.content && !req.body.update.tags) {
+        const data = await page.findByIdAndUpdate(
+          req.body._id,
+          {
+            ...req.body.update,
+            eat: timestamp,
+          },
+          { returnDocument: "after" }
+        );
+        if (data) {
+          io.emit("update-page", {
+            ...req.body.update,
+            eat: timestamp,
+          });
+        }
       }
+      if (req.body.update.content) {
+        //* create new content
+        if (!req.body.update.content._id) {
+          const data = await page.findByIdAndUpdate(
+            {
+              _id: req.body._id,
+            },
+            {
+              $push: {
+                content: { ...req.body.update.content, eat: timestamp },
+              },
+            },
+            { returnDocument: "after" }
+          );
+          if (data) {
+            io.emit("new-content", {
+              _id: req.body._id,
+              content: {
+                ...req.body.update.content,
+                eat: timestamp,
+              },
+            });
+          }
+        } else {
+          //* update existing content
+          const data = await page.findByIdAndUpdate(
+            {
+              _id: req.body._id,
+            },
+            {
+              $set: {
+                "content.$[elem]": {
+                  ...req.body.update.content,
+                  eat: timestamp,
+                },
+              },
+            },
+            {
+              arrayFilters: [{ "elem._id": req.body.update.content._id }],
+              returnDocument: "after",
+            }
+          );
+          if (data) {
+            io.emit("update-content", {
+              _id: req.body._id,
+              content: {
+                ...req.body.update,
+                eat: timestamp,
+              },
+            });
+          }
+        }
+      }
+      // todo
+      if (req.body.update.tags) {
+      }
+      res.header("Access-Control-Allow-Origin", CLIENT_URL);
+      res.status(200).send("ok");
     } catch (e) {
       console.log(e);
     }
@@ -103,22 +149,41 @@ app.put("/:db/:collection/update", jsonParser, async (req, res) => {
   }
 });
 
-app.delete("/:db/:collection/delete", jsonParser, async (req, res) => {
+app.delete("/delete", jsonParser, async (req, res) => {
   if (req.method === "DELETE") {
     try {
-      const { db, collection } = req.params;
-      const source = mongoClient.db(db).collection(collection);
-      const response = await source.deleteOne({
-        _id: new ObjectId(req.body._id),
-      });
-      if (response.deletedCount === 1) {
-        res.type("application/json");
-        res.header("Access-Control-Allow-Origin", CLIENT_URL as string);
-        res.status(200).send("ok");
-        io.emit("deleted-object", { ...req.body });
-      } else {
-        res.status(500).end();
+      await mongooseConnect();
+
+      if (!req.body.content && !req.body.tags) {
+        const response = await page.findByIdAndDelete(req.body._id);
+        if (response) {
+          io.emit("delete-page", { _id: response._id });
+        }
       }
+      if (req.body.content) {
+        const response = await page.findByIdAndUpdate(
+          {
+            _id: req.body._id,
+          },
+          {
+            $pull: {
+              content: { _id: req.body.content._id },
+            },
+          },
+          { returnDocument: "after" }
+        );
+        if (response) {
+          io.emit("delete-content", {
+            _id: req.body._id,
+            content: { ...req.body.content },
+          });
+        }
+      }
+      // todo
+      if (req.body.tags) {
+      }
+      res.header("Access-Control-Allow-Origin", CLIENT_URL);
+      res.status(200).send("ok");
     } catch (e) {
       console.log(e);
     }

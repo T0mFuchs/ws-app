@@ -1,8 +1,8 @@
 {
   "name": "express-web-socket",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development DEBUG=engine,socket.io* tsx watch .",
-    "": "/* cross-env  */",
+    "dev": "cross-env NODE_ENV=development tsx watch .",
+    "": "/* cross-env DEBUG=engine,socket.io* */",
     "prod": "node --loader tsx ."
   },
   "dependencies": {
@@ -17,7 +17,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongodb": "^5.0.0",
+    "mongoose": "^6.9.1",
     "socket.io": "^4.5.4",
     "tsx": "^3.12.3"
   }

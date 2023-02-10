@@ -31,6 +31,9 @@ const nextConfig = {
   env: {
     API_URL: process.env.API_URL,
   },
+  experimental: {
+    transpilePackages: ['@unocss/core', "@packages/types"],
+  }
 };
 
 module.exports = nextConfig;

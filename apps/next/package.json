@@ -1,9 +1,9 @@
 {
   "name": "next-app",
   "scripts": {
-    "dev": "cross-env DEBUG=socket.io:client next dev -p 3001",
+    "dev": "next dev -p 3001",
     "prod": "next build && next start -p 3001",
-    "": "/*  */"
+    "": "/* cross-env DEBUG=socket.io:client  */"
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.1.46",
@@ -21,8 +21,6 @@
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",
-    "framer-motion": "^9.0.2",
-    "jotai": "^2.0.0",
     "ky": "^0.33.2",
     "next": "13.0.1",
     "preact": "^10.11.3",
