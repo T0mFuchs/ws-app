@@ -27,6 +27,7 @@ io.on("connection", async (socket) => {
   socket.on("get-data", async () => {
     try {
       await mongooseConnect();
+      // @ts-ignore
       const data = await page.find({}).populate("parent").populate("children");
       //* emit data to all clients
       if (data) io.emit("data", data);
@@ -41,6 +42,7 @@ app.post("/create", jsonParser, async (req, res) => {
     try {
       const timestamp = Date.now();
       await mongooseConnect();
+      // @ts-ignore
       const data = await page.create({
         ...req.body,
         iat: timestamp,
@@ -68,6 +70,7 @@ app.put("/update", jsonParser, async (req, res) => {
       await mongooseConnect();
 
       if (!req.body.update.content && !req.body.update.tags) {
+        // @ts-ignore
         const data = await page.findByIdAndUpdate(
           req.body._id,
           {
@@ -86,6 +89,7 @@ app.put("/update", jsonParser, async (req, res) => {
       if (req.body.update.content) {
         //* create new content
         if (!req.body.update.content._id) {
+          // @ts-ignore
           const data = await page.findByIdAndUpdate(
             {
               _id: req.body._id,
@@ -108,6 +112,7 @@ app.put("/update", jsonParser, async (req, res) => {
           }
         } else {
           //* update existing content
+          // @ts-ignore
           const data = await page.findByIdAndUpdate(
             {
               _id: req.body._id,
@@ -161,6 +166,7 @@ app.delete("/delete", jsonParser, async (req, res) => {
         }
       }
       if (req.body.content) {
+        // @ts-ignore
         const response = await page.findByIdAndUpdate(
           {
             _id: req.body._id,
@@ -210,7 +216,7 @@ function shouldCompress(req: express.Request, res: express.Response) {
     })
   );
   try {
-    server.listen(3000, () => {
+    server.listen(5005, () => {
       console.log(
         `express-web-socket:${
           NODE_ENV === "development" ? "dev" : "prod"

@@ -1,6 +1,4 @@
 {
   "name": "@packages/types",
-  "description": "typings",
-  "types": "index.ts",
-  "dependencies": {}
+  "types": "index.ts"
 }

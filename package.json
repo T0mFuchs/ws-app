@@ -2,18 +2,23 @@
   "name": "ws-app",
   "scripts": {
     "dev": "turbo run dev --parallel --no-daemon",
-    "prod": "turbo run prod --parallel --no-daemon",
-    "p": "prettier --write \"**/*.{ts,tsx,md,json}\""
+    "prod": "pnpm lint && pnpm start",
+    "start": "turbo run prod --parallel --no-daemon",
+    "lint": "turbo run lint --parallel --no-daemon",
+    "/* remove packages */": "",
+    "rp": "pnpx npkill",
+    "/* format */": "",
+    "p": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@types/node": "^18.11.19",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "eslint": "^8.33.0",
-    "eslint-config-next": "13.0.1",
+    "eslint": "^8.34.0",
     "prettier": "^2.8.3",
     "turbo": "^1.7.4",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "unocss": "^0.49.4"
   },
   "prettier": {
     "semi": true,
