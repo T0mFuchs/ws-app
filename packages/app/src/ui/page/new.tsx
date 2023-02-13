@@ -2,7 +2,7 @@ import React from "react";
 import AutosizeInput from "react-input-autosize";
 import clsx from "clsx";
 
-import { createOne } from "@packages/hooks";
+import { createOne } from "@/hooks";
 
 import type { Page } from "@packages/types";
 
@@ -25,11 +25,10 @@ export default function NewPage() {
 
   return (
     <>
-      <form onSubmit={onSubmit} p-1>
+      <form onSubmit={onSubmit} className="p-1">
         <label htmlFor="clr" />
         <input
-          i-mdi-file-outline
-          mr-1
+          className="i-mdi-file-outline mr-1"
           type="color"
           name="clr"
           value={page?.clr ?? undefined}
@@ -38,9 +37,7 @@ export default function NewPage() {
         />
         <label htmlFor="name" />
         <AutosizeInput
-          bg-transparent
-          border-1 // @ts-ignore
-          rounded
+          className="bg-transparent border-1 rounded"
           name="name"
           placeholder="name"
           value={page?.name ?? ""}
@@ -48,15 +45,13 @@ export default function NewPage() {
         />
         <label htmlFor="desc" />
         <AutosizeInput
-          bg-transparent
-          border-1 // @ts-ignore
-          rounded
+          className="border-1 rounded bg-transparent"
           name="desc"
           placeholder="description"
           value={page?.desc ?? ""}
           onChange={(evt) => setPage({ ...page, desc: evt.target.value })}
         />
-        <button type="submit" className={btnStyle} ml-1 />
+        <button type="submit" className={btnStyle + " ml-1"} />
       </form>
     </>
   );

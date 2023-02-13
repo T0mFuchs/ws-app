@@ -1,0 +1,4 @@
+{
+  "extends": "@packages/tsconfig/tsconfig.client",
+  "include": ["src"]
+}

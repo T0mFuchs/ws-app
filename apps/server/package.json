@@ -8,9 +8,9 @@
     "p": "prettier --write \"**/*.ts\""
   },
   "dependencies": {
-    "@packages/types": "workspace:*",
-    "@packages/tsconfig": "workspace:*",
-    "@packages/eslint-config": "workspace:*",
+    "@packages/types": "*",
+    "@packages/tsconfig": "*",
+    "@packages/eslint-config": "*",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.13",

@@ -5,21 +5,27 @@ import NewPage from "./page/new";
 
 import type { Page as PageType } from "@packages/types";
 
+//import Modal from "./modal";
+const Modal = React.lazy(() => import("./modal"));
+
 export function Layout({ data }: { data: PageType[] | null }) {
   return (
-    <div grid gap-2 p-4>
+    <div className="grid gap-2 p-4">
       <>
         {data ? (
           <>
             {data.map((item: PageType) => (
-              <Page item={item} />
+              <Page page={item} />
             ))}
             <NewPage />
+            <>
+              <React.Suspense fallback={<></>}>
+                <Modal />
+              </React.Suspense>
+            </>
           </>
         ) : null}
       </>
-
-      <></>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 
-import { updateOne } from "@packages/hooks";
+import { updateOne } from "@/hooks";
 
 import { PageContent } from "@packages/types";
 
@@ -29,11 +29,10 @@ export default function NewContent({ pageId }: { pageId: string }) {
 
   return (
     <>
-      <form onSubmit={onSubmit} p-1>
+      <form onSubmit={onSubmit} className="p-1">
         <label htmlFor="value" />
         <input
-          rounded
-          border-0
+          className="border-0 rounded"
           name="value"
           placeholder="|"
           value={content?.value ?? ""}

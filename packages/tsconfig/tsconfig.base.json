@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "isolatedModules": true,
   },
   "extends": "@tsconfig/node16/tsconfig.json"
 }

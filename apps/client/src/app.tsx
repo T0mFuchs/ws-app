@@ -1,7 +1,9 @@
 import React from "react";
 import { io } from "socket.io-client";
+import { useAtom } from "jotai";
+import { pagesAtom } from "@packages/app";
 
-import { Layout } from "@packages/ui";
+import { Layout } from "@packages/app";
 
 import type { Socket } from "socket.io-client";
 import type { PageContent, Page } from "@packages/types";
@@ -12,6 +14,7 @@ const { VITE_API_URL } = import.meta.env as { [key: string]: string };
 export function App() {
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const [dataArray, setDataArray] = React.useState<Page[] | null>(null);
+  const [data, setData] = useAtom(pagesAtom);
 
   React.useEffect(() => {
     setSocket(io(VITE_API_URL, {}));
@@ -26,6 +29,7 @@ export function App() {
 
     socket.on("data", (data: Page[]) => {
       setDataArray(data);
+      setData(data);
     });
 
     socket.on("new-page", (data: Page) => {
