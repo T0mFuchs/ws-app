@@ -1,4 +1,5 @@
 export type Page = {
+  i?: number;
   _id?: string;
   name?: string;
   desc?: string;
@@ -10,12 +11,14 @@ export type Page = {
 };
 
 export type PageTag = {
+  i?: number;
   _id?: string;
   name?: string;
   clr?: string;
 };
 
 export type PageContent = {
+  i?: number;
   _id?: string;
   style?: keyof typeof contentStyles;
   value?: string;

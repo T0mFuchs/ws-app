@@ -28,7 +28,11 @@ io.on("connection", async (socket) => {
     try {
       await mongooseConnect();
       // @ts-ignore
-      const data = await page.find({}).populate("parent").populate("children");
+      const data = await page
+        .find({})
+        .populate("parent")
+        .populate("children")
+        .sort({ i: 1 });
       //* emit data to all clients
       if (data) io.emit("data", data);
     } catch (e) {

@@ -18,20 +18,20 @@ export default function Content({
   index: number;
   pageId: string;
 }) {
-
-  const [page, setPage] = useAtom(pageAtom)
+  const [page, setPage] = useAtom(pageAtom);
 
   React.useEffect(() => {
-    if (item) setPage((prev) => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        content: prev?.content?.map((content, i) => {
-          if (i === index) return item;
-          return content;
-        })
-      }
-    });
+    if (item)
+      setPage((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          content: prev?.content?.map((content, i) => {
+            if (i === index) return item;
+            return content;
+          }),
+        };
+      });
   }, [item]);
 
   const onSubmit = async (evt: any) => {
@@ -74,8 +74,16 @@ export default function Content({
         <input
           name="value"
           placeholder="|"
-          value={page && page._id === pageId ? page?.content[index]?.value : item?.value}
-          className={`${page && page._id === pageId ? page?.content[index]?.style : item?.style} border-0 rounded`}
+          value={
+            page && page._id === pageId
+              ? page?.content[index]?.value
+              : item?.value
+          }
+          className={`${
+            page && page._id === pageId
+              ? page?.content[index]?.style
+              : item?.style
+          } border-0 rounded`}
           onChange={(evt: any) => {
             return setPage((prev) => {
               if (!prev) return null;
@@ -86,7 +94,7 @@ export default function Content({
                   return item;
                 }),
               };
-            })
+            });
           }}
         />
       </form>

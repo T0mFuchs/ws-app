@@ -1,8 +1,11 @@
 // @ts-nocheck
 import React from "react";
+import Head from "react-meta-tags";
 import clsx from "clsx";
 import { Separator } from "@radix-ui/react-separator";
 import { useAtom } from "jotai";
+import { useSpring, animated } from "@react-spring/web";
+import { useDrag } from "@use-gesture/react";
 
 import Content from "./page/content";
 import NewContent from "./page/content/new";
@@ -30,11 +33,11 @@ export default function Modal() {
       const styles = window.getComputedStyle(modalDiv);
 
       let width = parseInt(styles.width, 10);
-      let x = 0;
+      let cx = 0;
 
       const onPointerMoveLeftResize = (evt) => {
-        const dx = evt.clientX - x;
-        x = evt.clientX;
+        const dx = evt.clientX - cx;
+        cx = evt.clientX;
         width = width - dx;
         modalDiv.style.width = `${width}px`;
       };
@@ -44,7 +47,7 @@ export default function Modal() {
         separator.style.backgroundColor = "#262626";
       };
       const onPointerDownLeftResize = (evt) => {
-        x = evt.clientX;
+        cx = evt.clientX;
         modalDiv.style.left = null;
         separator.style.width = "5px";
         separator.style.backgroundColor = "#1d4ed8"; // tailwindcss blue-700
@@ -65,11 +68,11 @@ export default function Modal() {
     <>
       {modalOpen && page ? (
         <div className="fixed z-1 right-0">
+          <Head>
+            <title>{page.name}</title>
+          </Head>
           <div style={{ backgroundColor: "var(--bg)" }} ref={ref}>
-            <div
-              className="absolute w-2 cursor-col-resize ml--1 h=100vmax"
-              ref={refLeft}
-            >
+            <div absolute w-2 cursor-col-resize ml--1 h="100vmax" ref={refLeft}>
               <Separator
                 relative
                 w="1px"
@@ -89,26 +92,6 @@ export default function Modal() {
                 hover:bg-red
                 title="close"
                 onClick={() => setModalOpen(false)}
-              />
-              <button
-                i-mdi-arrow-collapse
-                relative
-                top-1
-                left--1
-                focus:bg-red
-                hover:bg-red
-                title="collapse"
-                onClick={() => (ref.current.style.width = "fit-content")}
-              />
-              <button
-                i-mdi-arrow-collapse-horizontal
-                relative
-                top-1
-                left--1
-                focus:bg-red
-                hover:bg-red
-                title="split"
-                onClick={() => (ref.current.style.width = "50vw")}
               />
               <button
                 i-mdi-menu-up-outline

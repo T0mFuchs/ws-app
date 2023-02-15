@@ -87,5 +87,6 @@ export function App() {
     });
   }, [socket]);
 
+  // todo add loading fallback component
   return <Layout data={dataArray} />;
 }

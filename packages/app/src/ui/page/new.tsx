@@ -6,13 +6,13 @@ import { createOne } from "@/hooks";
 
 import type { Page } from "@packages/types";
 
-export default function NewPage() {
+export default function NewPage({ index }: { index: number }) {
   const [page, setPage] = React.useState<Page | null>(null);
 
   const onSubmit = async (evt: any) => {
     evt.preventDefault();
     if (page) {
-      await createOne({ data: { ...page } });
+      await createOne({ data: { i: index, ...page } });
     }
     setPage(null);
   };

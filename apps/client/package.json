@@ -14,6 +14,7 @@
     "@packages/app": "*",
     "jotai": "^2.0.1",
     "preact": "^10.12.1",
+    "react-meta-tags": "^1.0.1",
     "socket.io-client": "^4.6.0",
     "unocss": "^0.49.4"
   },

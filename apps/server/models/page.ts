@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 export const pageSchema = new mongoose.Schema({
+  i: {
+    type: Number,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -9,13 +13,27 @@ export const pageSchema = new mongoose.Schema({
   clr: String,
   tags: [
     {
-      name: String,
+      i: {
+        type: Number,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
       clr: String,
     },
   ],
   content: [
     {
-      style: String,
+      i: {
+        type: Number,
+        required: true,
+      },
+      style: {
+        type: String,
+        required: true,
+      },
       value: String,
     },
   ],
