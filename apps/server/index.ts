@@ -70,7 +70,6 @@ app.put("/update", jsonParser, async (req, res) => {
   if (req.method === "PUT") {
     try {
       const timestamp = Date.now();
-      console.log(req.body);
       await mongooseConnect();
 
       if (!req.body.update.content && !req.body.update.tags) {

@@ -21,6 +21,12 @@ export function App() {
   }, [VITE_API_URL]);
 
   React.useEffect(() => {
+    if (dataArray) {
+      console.log("dataArray", dataArray);
+    }
+  }, [dataArray]);
+
+  React.useEffect(() => {
     if (!socket) return;
 
     socket.on("connect", () => {
@@ -34,6 +40,7 @@ export function App() {
 
     socket.on("new-page", (data: Page) => {
       // @ts-ignore
+      console.log("client received: new-page", data);
       setDataArray((prev) => [...prev, data]);
     });
 

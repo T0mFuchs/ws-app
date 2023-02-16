@@ -11,7 +11,7 @@ export default function NewPage({ index }: { index: number }) {
 
   const onSubmit = async (evt: any) => {
     evt.preventDefault();
-    if (page) {
+    if (page && index) {
       await createOne({ data: { i: index, ...page } });
     }
     setPage(null);
