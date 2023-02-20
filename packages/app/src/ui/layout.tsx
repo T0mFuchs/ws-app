@@ -1,7 +1,10 @@
 import React from "react";
-
 import { useSprings, animated, config } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
+// @ts-ignore
+import clamp from "lodash.clamp";
+// @ts-ignore
+import swap from "lodash-move";
 
 import Page from "./page";
 import NewPage from "./page/new";
@@ -46,14 +49,11 @@ export function Layout({ data }: { data: PageType[] | null }) {
   const bind = useDrag(({ args: [originalIndex], active, movement: [, y] }) => {
     // @ts-ignore
     const curIndex = order.indexOf(originalIndex);
-    const curRow = curIndex + (y < 0 ? -1 : y > 0 ? 1 : 0); // @ts-ignore
-    const newOrder = [...order]; // @ts-ignore
-    newOrder.splice(curIndex, 1);
-    newOrder.splice(curRow, 0, originalIndex);
+    const curRow = clamp(Math.round((curIndex * 50 + y) / 50), 0, data?.length - 1);
+    const newOrder = swap(order, curIndex, curRow);
     api.start(fn(newOrder, active, originalIndex, curIndex, y));
     if (!active) setOrder(newOrder);
   });
-
 
   return (
     <div className="grid gap-2 p-4">
@@ -72,10 +72,10 @@ export function Layout({ data }: { data: PageType[] | null }) {
                   }}
                   fixed
                 >
-                  <Page page={data[i]} index={order[i]} />
+                  <Page page={data[i]} index={i} newIndex={order.indexOf(i)} /> {/* index is for 1 bigger than it should be, also minus -1 turns into -2 */}
                 </animated.div>
               ))}
-              <NewPage index={data.length} />
+              <NewPage index={data?.length || 0} />
             </div>
             <>
               <React.Suspense fallback={<></>}>

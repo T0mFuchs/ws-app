@@ -13,43 +13,44 @@ import type { Page } from "@packages/types";
 import Content from "./content";
 import NewContent from "./content/new";
 
-export default function Page({ page, index }: { page: Page; index: number }) {
+export default function Page({
+  page,
+  index,
+  newIndex,
+}: {
+  page: Page;
+  index: number;
+  newIndex: number;
+}) {
   const [modalOpen, setModalOpen] = useAtom(modalOpenAtom);
-  const [currentPage, setCurrentPage] = React.useState<Page>(page);
   const [sharedPage, setSharedPage] = useAtom(pageAtom);
 
   React.useEffect(() => {
-    if (page) setCurrentPage(page);
-  }, [page]);
+    if (page) {
+      setSharedPage(page);
+    }
+  }, [page, index, newIndex]);
 
   React.useEffect(() => {
-    if (page && index) {
-      console.log(page.name, page.i, "index", index);
+    if (index !== newIndex && newIndex !== -1) {
+      handleReorder();
     }
-  }, [page, index]);
-
-  React.useEffect(() => {
-    if (page && index && page.i !== index) {
-      console.log("[handleReorder]: page.i", page.i, "index", index);
-      handleReorder();7
-    }
-  }, [page, index])
+  }, [page, index, newIndex]);
 
   const handleReorder = async () => {
-      await updateOne({
-        data: {
-          // @ts-ignore
-          _id: page._id,
-          update: { i: index },
-        }
-      })
+    await updateOne({
+      data: {
+        // @ts-ignore
+        _id: page._id,
+        update: { i: newIndex },
+      },
+    });
   };
-
 
   const onSubmit = async (evt: any) => {
     evt.preventDefault();
-    if (currentPage) {
-      if (currentPage.name === "") {
+    if (sharedPage) {
+      if (sharedPage.name === "") {
         await deleteOneById({
           data: {
             // @ts-ignore
@@ -58,17 +59,17 @@ export default function Page({ page, index }: { page: Page; index: number }) {
         });
         return;
       }
-      if (page.name !== currentPage?.name || page.desc !== currentPage?.desc) {
+      if (page.name !== sharedPage?.name || page.desc !== sharedPage?.desc) {
         await updateOne({
           data: {
             // @ts-ignore
             _id: page._id,
             update: {
-              i: currentPage?.i ?? index,
+              i: page?.i ?? index,
               name:
-                page.name !== currentPage?.name ? currentPage?.name : page?.name,
+                page.name !== sharedPage?.name ? sharedPage?.name : page?.name,
               desc:
-                page.desc !== currentPage?.desc ? currentPage?.desc : page?.desc,
+                page.desc !== sharedPage?.desc ? sharedPage?.desc : page?.desc,
             },
           },
         });
@@ -96,7 +97,7 @@ export default function Page({ page, index }: { page: Page; index: number }) {
     "bg-transparent border-0":
       page?.name === sharedPage?.name && page?.desc === sharedPage?.desc,
     "i-mdi-file-document-edit-outline hover:text-teal-500 focus:text-teal-500":
-      (sharedPage?.name !== "" && currentPage?.name !== sharedPage?.name) ||
+      (sharedPage?.name !== "" && sharedPage?.name !== sharedPage?.name) ||
       page?.desc !== sharedPage?.desc,
     "i-mdi-file-document-remove-outline text-red": sharedPage?.name === "",
   });
@@ -112,15 +113,15 @@ export default function Page({ page, index }: { page: Page; index: number }) {
               type="color"
               name="clr"
               value={
-                currentPage && currentPage._id === page?._id
-                  ? currentPage.clr
+                sharedPage && sharedPage._id === page?._id
+                  ? sharedPage.clr
                   : page?.clr
               }
               onChange={(evt: any) => {
-                setCurrentPage({ ...page, clr: evt.target.value });
+                setSharedPage({ ...page, clr: evt.target.value });
                 submitClr();
               }}
-              style={{ color: currentPage?.clr ?? "var(--text)" }}
+              style={{ color: sharedPage?.clr ?? "var(--text)" }}
             />
             <label htmlFor="name" />
             <AutosizeInput
@@ -128,12 +129,12 @@ export default function Page({ page, index }: { page: Page; index: number }) {
               name="name"
               placeholder="|"
               value={
-                currentPage && currentPage._id === page?._id
-                  ? currentPage.name
+                sharedPage && sharedPage._id === page?._id
+                  ? sharedPage.name
                   : page?.name
               }
               onChange={(evt: any) =>
-                setCurrentPage({ ...page, name: evt.target.value })
+                setSharedPage({ ...page, name: evt.target.value })
               }
             />
             <label htmlFor="desc" />
@@ -142,19 +143,19 @@ export default function Page({ page, index }: { page: Page; index: number }) {
               name="desc"
               placeholder="empty"
               value={
-                currentPage && currentPage._id === page?._id
-                  ? currentPage.desc
+                sharedPage && sharedPage._id === page?._id
+                  ? sharedPage.desc
                   : page?.desc
               }
               onChange={(evt) =>
-                setCurrentPage({ ...page, desc: evt.target.value })
+                setSharedPage({ ...page, desc: evt.target.value })
               }
             />
             <button
               type="submit"
               disabled={
-                page?.name === currentPage?.name &&
-                page?.desc === currentPage?.desc
+                page?.name === sharedPage?.name &&
+                page?.desc === sharedPage?.desc
               }
               className={btnStyle}
               ml-1

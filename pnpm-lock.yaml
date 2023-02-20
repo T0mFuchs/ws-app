@@ -120,6 +120,8 @@ importers:
       date-fns: ^2.29.3
       jotai: ^2.0.1
       ky: ^0.33.2
+      lodash-move: ^1.1.1
+      lodash.clamp: ^4.0.3
       preact: ^10.12.1
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -144,6 +146,8 @@ importers:
       date-fns: 2.29.3
       jotai: 2.0.1_react@18.2.0
       ky: 0.33.2
+      lodash-move: 1.1.1
+      lodash.clamp: 4.0.3
       react-input-autosize: 3.0.0_react@18.2.0
       react-meta-tags: 1.0.1_biqbaboplfbrettd7655fr4n2y
       socket.io-client: 4.6.0
@@ -4582,6 +4586,16 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+
+  /lodash-move/1.1.1:
+    resolution: {integrity: sha512-Gm8/lC16NXv2tweIiX7pYhgAQdoSwXzO/WsSmNX/un8rBQUIC7YkauFK2Sdt4NBqWV28BW25P8eDkHWPt91YqQ==}
+    dependencies:
+      lodash: 4.17.21
+    dev: false
+
+  /lodash.clamp/4.0.3:
+    resolution: {integrity: sha512-HvzRFWjtcguTW7yd8NJBshuNaCa8aqNFtnswdT7f/cMd/1YKy5Zzoq4W/Oxvnx9l7aeY258uSdDfM793+eLsVg==}
+    dev: false
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}

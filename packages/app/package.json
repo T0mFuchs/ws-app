@@ -21,6 +21,8 @@
     "date-fns": "^2.29.3",
     "jotai": "^2.0.1",
     "ky": "^0.33.2",
+    "lodash-move": "^1.1.1",
+    "lodash.clamp": "^4.0.3",
     "react-input-autosize": "^3.0.0",
     "react-meta-tags": "^1.0.1",
     "socket.io-client": "^4.6.0"
